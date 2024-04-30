@@ -53,7 +53,7 @@ export const login = async (req , res , next)=>{
             const token = jwt.sign({id:user._id,username:user.username } , process.env.Key)
                const exdate = new Date (Date.now() + 60*1000)
                res.cookie('access_token',token,{httpOnly :true ,expires: exdate })
-              res.json('login sussesfully')
+               return  res.json('login sussesfully')
             }else{
                 return res.json('invalid password')
             }

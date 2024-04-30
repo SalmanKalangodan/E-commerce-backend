@@ -14,7 +14,9 @@ export const usertoken = (req, res , next) =>{
             if(err) {
              return res.status(400).json("verify alla  please login")
             }
-        req.username = decode.username
+            console.log('token vari');
+            req.id = decode.id
+           console.log(req.id);
         next()
         })
     }catch (err) {

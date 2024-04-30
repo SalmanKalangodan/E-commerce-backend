@@ -25,7 +25,6 @@ export const getproductscategary = async (req ,res , next )=>{
         const { categoryname } = req.params
         console.log(categoryname);
         const prodect = await Products.find({$or :[ {category : categoryname}]})
-        console.log(prodect);
         res.json(prodect)
     }catch (err){
         res.json(err)
