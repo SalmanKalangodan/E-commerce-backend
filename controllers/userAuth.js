@@ -24,6 +24,7 @@ export const register = async (req , res , next)=>{
             username:validata.username,
             email:validata.email,
             password:hashpassword,
+            profileImg:req.cloudnaryimge
         })
         newuser.save()
         console.log(newuser)

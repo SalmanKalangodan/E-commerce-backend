@@ -1,7 +1,40 @@
 import {v2 as cloudinary} from 'cloudinary';
-          
+import dotenv from 'dotenv'
+import multer from 'multer'
+
+
+dotenv.config()
+
 cloudinary.config({ 
-  cloud_name: 'dldmgtnya', 
-  api_key: '624768521781617', 
-  api_secret: 'woVhELmOAOian4siTt8izy_tEew' 
-});
+  cloud_name: process.env.Cloud_name, 
+  api_key: process.env.API_KEY, 
+  api_secret: process.env.API_SECRECT 
+})
+
+const storage = multer.diskStorage({})
+
+
+const uploading = multer({
+  storage:storage,
+  limits:{
+    fileSize:1024*1024*1
+  }
+})
+
+const imageupload = (req , res , next)=>{
+  uploading.single('image')(req , res , async err => {
+    try {
+      if(req.file){
+        const result = await cloudinary.uploader.upload(req.file.path)
+        console.log(result);
+        req.cloudnaryimge = result.secure_url
+      }
+      next()
+    } catch (error) {
+      res.json(error)
+    }
+  })
+
+}
+
+export default imageupload
