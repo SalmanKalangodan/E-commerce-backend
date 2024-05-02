@@ -38,7 +38,7 @@ export const register = async (req , res , next)=>{
 
 export const login = async (req , res , next)=>{
     try {
-        process.env.Key = crypto.randomBytes(64).toString('hex')
+        // process.env.Key = crypto.randomBytes(64).toString('hex')
         const validata = await userlogin.validateAsync(req.body)
         console.log(validata);
         const user = await Users.findOne({email : validata.email})
