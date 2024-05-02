@@ -9,7 +9,7 @@ const cartmodel = new mongoose.Schema({
     },
     productId:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:"Products",
+        ref:"products",
         require:true
     },
     qnt:{

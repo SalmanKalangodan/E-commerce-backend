@@ -16,7 +16,6 @@ export const usertoken = (req, res , next) =>{
             }
             console.log('token vari');
             req.id = decode.id
-           console.log(req.id);
         next()
         })
     }catch (err) {
