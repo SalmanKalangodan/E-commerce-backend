@@ -23,9 +23,21 @@ export const addWishlist = async (req , res, next) =>{
 }
 
 export const getWishlist =async (req , res , next)=>{
+    try{
+        const {id} = req.params
+        const datas = await Wishlist.find({userId:id})
+        res.json(datas)
+    }catch (err){
+        res.json(err)
+    }
+
 
 }
 
 export const deleteWishlist = async (req , res , next)=>{
-    
+    try{
+        const {id} = req.params
+    }catch(err){
+        res.json(err)
+    }
 }

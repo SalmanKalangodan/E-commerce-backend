@@ -1,26 +1,43 @@
 import Cart from "../Models/cartmodel.js";
+import Products from "../Models/productmodel.js";
+import Users from "../Models/usermodel.js";
 
 
 export const AddCart = async (req, res, next) =>{
   try{
     const userid =req.id
     const {id} = req.params
-    const exdata  = await Cart.find({productId:id})
-    console.log(exdata);
-    if(!exdata.length==0){
-      const qnt = exdata[0].qnt
-      console.log(qnt);
-    const addqnt = await Cart.updateOne({productId:id,qnt:qnt},{$inc:{qnt:1}})
-    return res.json(addqnt)
+    const user = await Users.findById(userid)
+
+    if(!user) {
+      return res.status(404).json("user not found")
     }
-     const newcart = new Cart({
+
+    const products = await Products.findById(id)
+
+    if(!products){
+      return res.status(404).json("products not found")
+    }
+  
+    const exdata  = await Cart.find({$and:[{productId:id} ,{ userId : userid}]})
+
+    if(!exdata.length==0){
+   const qnt = exdata[0].qnt
+   await Cart.updateOne({productId:id,qnt:qnt},{$inc:{qnt:1}})
+    return res.status(200).json("cart product increment")
+    }
+     const newcart = await Cart.create({
       userId : userid,
-      productId: id
+      productId: id,
+      qnt:1
      })
-     newcart.save()
-     res.json(newcart)
+
+      user.cart.push(newcart._id)
+     await user.save()
+     return res.status(200).json("cart add successfully")
     }catch (err){
-    res.json(err)
+      console.log(err);
+    res.json(err+"this is err")
   }
 }
 

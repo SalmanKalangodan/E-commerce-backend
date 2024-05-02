@@ -30,7 +30,11 @@ const userSchama = new mongoose.Schema({
     isDeleted:{
         type:Boolean,
         default:false
-    }
+    },
+    cart :[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:"Cart"
+    }]
 },{timestamps : true})
 
 const Users = mongoose.model('Users',userSchama);
