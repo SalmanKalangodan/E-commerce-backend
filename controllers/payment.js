@@ -18,7 +18,7 @@ try {
     const userid = req.params.id
     const user = await Users.findById(userid).populate({
         path:'cart',
-        populate:{path : 'productId'}
+        populate:[ {path : 'productId'} , {path : 'address'}]
     });
 
     if(!user){
@@ -88,7 +88,8 @@ export const success  = async (req , res ) => {
         prodectId : prodectId,
         orderId : session.id,
         paymentId : `demo ${Date.now()}`,
-        totalprice : session.amount_total
+        totalprice : session.amount_total,
+        address : user.address
     })
       order.save()
 

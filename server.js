@@ -9,6 +9,7 @@ import cartrout from './Routs/cartrout.js'
 import wishlistrout from './Routs/wishlistrout.js'
 import paymentrout from './Routs/paymentrout.js'
 import adminproductrout from './Routs/adminproductrout.js'
+import userAddress from './Routs/userAddressrout.js'
 
 dotenv.config();
 const app = express();
@@ -27,6 +28,8 @@ app.use('/api/user', cartrout)
 app.use('/api/user',wishlistrout)
 app.use('/api/user',paymentrout)
 app.use('/api/admin',adminproductrout)
+app.use('/api/user',userAddress)
+
 
 app.listen(PORT , ()=>console.log(`server is runnig on ${PORT}`))
 

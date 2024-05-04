@@ -16,7 +16,6 @@ const userSchama = new mongoose.Schema({
     },
     profileImg:{
         type : String,
-        required:true
     },
     accountCreatedDate:{
         type:Date,
@@ -38,6 +37,10 @@ const userSchama = new mongoose.Schema({
     Orders : [{
         type : mongoose.Schema.Types.ObjectId,
         ref:'Orders'
+    }],
+    address : [{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"address"
     }]
 },{timestamps : true})
 
