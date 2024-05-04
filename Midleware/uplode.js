@@ -31,7 +31,7 @@ const imageupload = (req , res , next)=>{
       }
       next()
     } catch (error) {
-      res.json(error)
+      res.status(400).json(error)
     }
   })
 

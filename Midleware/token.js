@@ -7,14 +7,13 @@ export const usertoken = (req, res , next) =>{
     try{
         const token = req.headers["authorization"]
         if(!token){
-            return res.status(400).json('token illakil please login')
+            return res.status(400).json('please login')
         }
       
         jwt.verify(token , process.env.Key,(err, decode)=>{
             if(err) {
-             return res.status(400).json("verify alla  please login")
+             return res.status(400).json("somthing want wrong try again")
             }
-            console.log('token vari');
             req.id = decode.id
         next()
         })

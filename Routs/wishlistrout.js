@@ -5,8 +5,8 @@ import { addWishlist, deleteWishlist, getWishlist } from '../controllers/wishlis
 
 const router = express.Router()
 
-router.post('/:id/cart',usertoken,addWishlist)
-router.get('/:id/cart',usertoken,getWishlist)
-router.delete('/:id/cart',usertoken,deleteWishlist)
+router.post('/:id/wishlists',usertoken,addWishlist)
+router.get('/:id/wishlists',usertoken,getWishlist)
+router.delete('/:id/wishlists',usertoken,deleteWishlist)
 
 export default router

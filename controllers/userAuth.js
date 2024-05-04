@@ -8,7 +8,7 @@ import { usertoken } from "../Midleware/token.js";
 
 
 
-export const register = async (req , res , next)=>{
+export const register = async (req , res)=>{
     try{
         const validata = await userSchema.validateAsync(req.body)
         const existuser = await Users.findOne({email: validata.email})
@@ -18,7 +18,6 @@ export const register = async (req , res , next)=>{
         bcrypt.hash(validata.password,10,(err,hash)=>{
             if (err) throw err
             const hashpassword = hash
-            console.log(hashpassword);
 
         const newuser = new Users({
             username:validata.username,
@@ -28,7 +27,7 @@ export const register = async (req , res , next)=>{
         })
         newuser.save()
         console.log(newuser)
-        res.json(newuser)
+        res.status(200).json("registration complited")
         })
 
     }
@@ -37,7 +36,7 @@ export const register = async (req , res , next)=>{
     }
 }
 
-export const login = async (req , res , next)=>{
+export const login = async (req , res )=>{
     try {
         // process.env.Key = crypto.randomBytes(64).toString('hex')
         const validata = await userlogin.validateAsync(req.body)
@@ -45,7 +44,7 @@ export const login = async (req , res , next)=>{
         const user = await Users.findOne({email : validata.email})
         console.log(user);
         if(!user){
-          return  res.status(404).json('not found')
+          return  res.status(404).json('user not found')
         }
         bcrypt.compare(validata.password , user.password,(err, result)=>{
             if(err) throw err

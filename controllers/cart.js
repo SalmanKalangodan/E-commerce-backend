@@ -3,7 +3,7 @@ import Products from "../Models/productmodel.js";
 import Users from "../Models/usermodel.js";
 
 
-export const AddCart = async (req, res, next) =>{
+export const AddCart = async (req, res) =>{
   try{
     const userid =req.id
     const {id} = req.params
@@ -34,17 +34,16 @@ export const AddCart = async (req, res, next) =>{
 
       user.cart.push(newcart._id)
      await user.save()
-     return res.status(200).json("cart add successfully")
+     return res.status(200).json("item added successfully")
     }catch (err){
-      console.log(err);
-    res.json(err+"this is err")
+    res.json(err + "this is err")
   }
 }
 
-export const getCart =async (req , res , next) =>{
+export const getCart =async (req , res) =>{
   try{
   const id = req.params.id
-  console.log(id)
+
   const user = await Users.findById(id).populate(
    {
     path : 'cart',
@@ -67,7 +66,7 @@ res.status(200).json(user.cart)
   }
 }
 
-export const deleteCart = async (req , res , next ) =>{
+export const deleteCart = async (req , res) =>{
   try{
     const id  = req.params.id;
     const userid = req.id ;
@@ -95,9 +94,7 @@ if(data !== -1){
   user.cart.splice(data , 1)
   await user.save()
 }
-res.json(data)
-
- 
+res.status(200).json('remove item')
   }catch (err){
     res.json(err)
   }

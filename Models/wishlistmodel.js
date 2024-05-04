@@ -9,12 +9,8 @@ const wishlist = new mongoose.Schema({
     },
     productId:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:"Products",
+        ref:"products",
         require:true
-    },
-    qnt:{
-        type:Number,
-        default:1
     }
 })
 
