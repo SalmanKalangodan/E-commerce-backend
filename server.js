@@ -10,6 +10,9 @@ import wishlistrout from './Routs/wishlistrout.js'
 import paymentrout from './Routs/paymentrout.js'
 import adminproductrout from './Routs/adminproductrout.js'
 import userAddress from './Routs/userAddressrout.js'
+import orderrout from './Routs/orderrout.js'
+import adminrout from './Routs/adminrout.js'
+
 
 dotenv.config();
 const app = express();
@@ -29,7 +32,8 @@ app.use('/api/user',wishlistrout)
 app.use('/api/user',paymentrout)
 app.use('/api/admin',adminproductrout)
 app.use('/api/user',userAddress)
-
+app.use('/api/user' ,orderrout)
+app.use('/api/admin' , adminrout)
 
 app.listen(PORT , ()=>console.log(`server is runnig on ${PORT}`))
 

@@ -3,6 +3,7 @@ import Users from "../Models/usermodel.js";
 import dotenv from 'dotenv'
 import Order from "../Models/ordermodel.js";
 import Cart from "../Models/cartmodel.js";
+import Address from "../Models/addressmodel.js";
 
 
 
@@ -18,7 +19,7 @@ try {
     const userid = req.params.id
     const user = await Users.findById(userid).populate({
         path:'cart',
-        populate:[ {path : 'productId'} , {path : 'address'}]
+        populate:{path : 'productId'} 
     });
 
     if(!user){
@@ -82,16 +83,16 @@ export const success  = async (req , res ) => {
         const {userid , user ,session} = datas
     const cartitem = user.cart
     const prodectId = cartitem.map(value => value.productId._id)
- 
+    const address  = await Address.findOne({userId : userid ,defaultaddress : true })
     const  order = new Order({
         userid : userid,
         prodectId : prodectId,
         orderId : session.id,
         paymentId : `demo ${Date.now()}`,
         totalprice : session.amount_total,
-        address : user.address
+        address : address
     })
-      order.save()
+     await order.save()
 
       const orderId = order._id
 

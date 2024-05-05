@@ -33,6 +33,10 @@ const ordermodel = mongoose.Schema({
     paymentId : {
         type : String,
         require : true
+    },
+    address :{
+        type : String,
+        require:true
     }
 })
 

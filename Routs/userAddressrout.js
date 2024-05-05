@@ -1,5 +1,6 @@
 import express from 'express'
-import { getAddress, userAddress } from '../controllers/userAddress.js'
+import { deleteAddress, getAddress, userAddress } from '../controllers/userAddress.js'
+import { usertoken } from '../Midleware/token.js'
 
 
 const router = express.Router()
@@ -8,5 +9,6 @@ const router = express.Router()
 
 router.post('/:id/address',userAddress)
 router.get('/:id/address',getAddress)
+router.delete('/:id/address',usertoken,deleteAddress)
 
 export default router

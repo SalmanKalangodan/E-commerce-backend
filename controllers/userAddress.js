@@ -50,7 +50,6 @@ export const getAddress = async (req , res) =>{
     try {
         //get user id from params
         const userid = req.params.id
-        console.log(userid);
         //find user in DB using id
         const user = await Users.findById(userid).populate({
             path : 'address',
@@ -69,5 +68,39 @@ export const getAddress = async (req , res) =>{
 
     } catch (error) {
         res.json("this is"+error)
+    }
+}
+
+//delete the address 
+
+export const deleteAddress = async (req, res) =>{
+    try {
+        // get user id from  req obj
+        const userid = req.id
+        //get address id from params
+        const id = req.params.id
+        //find user using id
+        const user = await Users.findById(userid)
+        //if not fount user 
+        if(!user){
+            return res.status(404).json("user not found")
+        }
+        //find address using id 
+        const address = await Address.findById(id)
+        //if not found address
+        if(!address){
+            return res.status(404).json('address not found')
+        }
+        //delete data in address
+        await  Address.deleteOne({_id : id})
+        //find index of refference id
+        const data = user.address.findIndex(value => value.equals(id))
+        //delete refference in user data
+        if(data !== -1){
+            user.address.splice(data,1)
+            await user.save()
+        }
+    } catch (error) {
+        res.json(error)
     }
 }

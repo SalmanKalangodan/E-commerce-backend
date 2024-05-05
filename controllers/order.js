@@ -1,0 +1,27 @@
+import Users from "../Models/usermodel.js"
+
+
+
+export const getorders = async (req , res ) =>{
+    try {
+        //get user using params
+        const userid = req.params.id
+        //find user using id
+        const user = await Users.findById(userid).populate({
+            path:'order',
+            populate : {path : '_id'}
+        })
+        //if not find user
+        if(!user){
+            return res.status(404).json('not found user')
+        }
+        // check the order is empty
+        if(!user.Orders || user.Orders.length !==0 ){
+            return res.status(200).json("you have no orders")
+        }
+        // if the orders not empty
+        res.status(200).json(user.Orders) 
+    } catch (error) {
+        res.json(err)
+    }
+}
