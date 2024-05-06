@@ -1,4 +1,5 @@
 import Products from "../Models/productmodel.js"
+import Sales from "../Models/salesmodel.js"
 
 
 
@@ -125,4 +126,4 @@ export const deleteproduct = async (req , res) =>{
     } catch (error) {
         res.json(error)
     }
-}
+} 

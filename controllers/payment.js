@@ -4,6 +4,7 @@ import dotenv from 'dotenv'
 import Order from "../Models/ordermodel.js";
 import Cart from "../Models/cartmodel.js";
 import Address from "../Models/addressmodel.js";
+import Sales from "../Models/salesmodel.js";
 
 
 
@@ -84,6 +85,7 @@ export const success  = async (req , res ) => {
     const cartitem = user.cart
     const prodectId = cartitem.map(value => value.productId._id)
     const address  = await Address.findOne({userId : userid ,defaultaddress : true })
+
     const  order = new Order({
         userid : userid,
         prodectId : prodectId,
@@ -93,7 +95,20 @@ export const success  = async (req , res ) => {
         address : address
     })
      await order.save()
-
+     cartitem.forEach(async value => {
+        console.log(value.productId);
+         const newsale=  new Sales({
+            userId : value.userId ,
+            productId : value.productId._id,
+            name : value.productId.title,
+            image : value.productId.image,
+            price : value.productId.price,
+            totalprice : value.productId.price*value.qnt,
+            qnt : value.qnt
+         })
+        await newsale.save()
+     });
+         
       const orderId = order._id
 
    const userupdate  = await Users.findOneAndUpdate({_id : userid},{
@@ -104,8 +119,8 @@ export const success  = async (req , res ) => {
 if(!userupdate){
 res.status(500).json('faild update userData')
 }
-console.log(cartitem);
 await Cart.deleteMany({_id : {$in : cartitem }})
+
 res.status(200).json("payment successful") 
 
     } catch (error) {
