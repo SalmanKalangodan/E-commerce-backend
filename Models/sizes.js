@@ -13,6 +13,10 @@ const newsize = new mongoose.Schema({
     stock : {
         type : Number,
         default : 0 ,
+    },
+    inStock : {
+        type : Boolean,
+        default : true
     }
 })
 
