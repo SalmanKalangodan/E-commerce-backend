@@ -15,4 +15,5 @@ router.get('/orders' ,getallorders )
 router.get('/sales/report' , allstatus)
 router.get('/sales' , getsales )
 router.get('/sales/filter' , filtersales)
+
 export default router

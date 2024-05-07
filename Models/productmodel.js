@@ -27,7 +27,11 @@ const productsSchema = new mongoose.Schema({
     isDeleted: {
         type : Boolean,
         required :false
-    }
+    },
+    sizes :  [{
+        type : mongoose.Schema.Types.ObjectId,
+        ref : 'size'
+    }]
 })
 
 const Products = mongoose.model('products' , productsSchema)
