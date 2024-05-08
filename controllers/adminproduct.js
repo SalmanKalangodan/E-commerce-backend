@@ -3,9 +3,10 @@ import Sales from "../Models/salesmodel.js"
 
 
 
-export const addproducts = async (req, res) =>{
-   try {
+export const addproducts = async (req, res, next) =>{
+   
     const  {title , description , price ,image ,category} = req.body
+    try {
     const exproduct = await Products.findOne({title : title , description : description , price : price , category : category})
     if(exproduct){
         return res.status(400).json("product alredy added")
@@ -20,13 +21,13 @@ export const addproducts = async (req, res) =>{
      newproduct.save()
     res.status(200).json(newproduct)
    } catch (error) {
-    res.status(500).json(error)
+    next(error)
    }
 }
 
 // get all products in admin
 
-export const getproducts = async (req , res) =>{
+export const getproducts = async (req , res , next) =>{
     try {
         // get all products
         const products  = await Products.find({})
@@ -37,15 +38,16 @@ export const getproducts = async (req , res) =>{
         // if find products 
         res.status(200).json(products)
     } catch (error) {
-        res.json(error)
+        next(error)
     }
 }
 
-export const getproductid = async (req , res) =>{
-    try {
+export const getproductid = async (req , res ,next) =>{
+   
       // get product id in params
       const productid = req.params.id
       // find product using id
+      try {
       const product = await Products.findById(productid)
       // if not find product
       if(!product) {
@@ -54,15 +56,16 @@ export const getproductid = async (req , res) =>{
       // if find product
       res.status(200).json(product) 
     } catch (error) {
-        res.json(error)
+        next(error)
     }
 }
 
-export const getproductcategory = async (req, res) =>{
-    try {
+export const getproductcategory = async (req, res , next) =>{
+    
         // get catagory from params
         const category = req.params.category
         // find products using category
+        try {
         const products = await Products.find({category})
         // if not find products 
         if(!products){
@@ -71,15 +74,16 @@ export const getproductcategory = async (req, res) =>{
         // find products 
         res.status(200).json(products)
     } catch (error) {
-        res.json(error)
+        next(error)
     }
 }
 
-export const updateproduct = async (req , res) =>{
-    try {
+export const updateproduct = async (req , res , next) =>{
+   
         // get product id using params
         const productid = req.params.id
         // find product using id
+        try {
         const product = await Products.findById(productid)
         // not find product 
         if(!product) {
@@ -105,18 +109,19 @@ export const updateproduct = async (req , res) =>{
 
         res.status(200).json("product update successfuly")
     } catch (error) {
-        res.json(error)
+        next(error)
     }
 }
 
 
 // delete product
 
-export const deleteproduct = async (req , res) =>{
-    try {
+export const deleteproduct = async (req , res , next) =>{
+    
         // get product id using params 
         const productid = req.params.id
         //find products usning id delete product
+        try {
         const prodect = await Products.findByIdAndDelete(productid)
         // if not found product
         if(!prodect) {
@@ -124,6 +129,30 @@ export const deleteproduct = async (req , res) =>{
         }
         res.status(200).json('product delete successfuly')
     } catch (error) {
-        res.json(error)
+        next(error)
     }
 } 
+
+
+// hide product 
+
+export const hideproducts = async(req , res , next) =>{
+    
+        // get product id 
+        const id = req.params.id
+        //get data form body
+        const data = req.body.hide
+        //update product
+        try {
+        if(data === true){
+             await Products.updateOne({id} , {isHide : data})
+             return  res.status(200).json("product hided")
+        }else{
+            await Products.updateOne({_id : id} , {isHide : data})
+            return  res.status(200).json("product hided")
+        }
+       
+    } catch (error) {
+        next(error)
+    }
+}

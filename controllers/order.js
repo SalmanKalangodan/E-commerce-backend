@@ -2,11 +2,11 @@ import Users from "../Models/usermodel.js"
 
 
 
-export const getorders = async (req , res ) =>{
-    try {
+export const getorders = async (req , res ,next) =>{
         //get user using params
         const userid = req.params.id
         //find user using id
+        try {
         const user = await Users.findById(userid).populate({
             path:'order',
             populate : {path : '_id'}
@@ -22,6 +22,6 @@ export const getorders = async (req , res ) =>{
         // if the orders not empty
         res.status(200).json(user.Orders) 
     } catch (error) {
-        res.json(err)
+       next(error)
     }
 }

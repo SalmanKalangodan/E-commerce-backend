@@ -2,28 +2,31 @@ import dotenv from 'dotenv'
 import jwt from 'jsonwebtoken'
 import Users from '../Models/usermodel.js'
 
+
 dotenv.config()
 
-export const adminLogin = async (req ,res) =>{
-    try {
+export const adminLogin = async (req ,res,next) =>{
+    
         // get data from the body
         const {email , password } = req.body
         // check the this admin
+        try {
         if(email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD){
-           token = jwt.sign({email},process.env.KEY)
+           const exdate = new Date (Date.now() + 60*1000)
+           const token = jwt.sign({email},process.env.KEY)
            res.cookie('access_token',token,{httpOnly :true ,expires: exdate })
            return  res.json('admin login sussesfully')
         }
         // if not found
     } catch (error) {
-        res.json("login faild")
+        next(error)
     }
 }
 
 
 // list all users
 
-export const listusers = async (req, res) =>{
+export const listusers = async (req, res , next) =>{
 try {
     // get all users
     const users = await Users.find({}) 
@@ -34,17 +37,18 @@ try {
     // passing the data to clint
     res.status(200).json(users)
 } catch (error) {
-    res.json(error)
+    next(error)
 }    
 }
 
 // find user by id 
 
-export const getuserid = async (req , res) =>{
-    try {
+export const getuserid = async (req , res , next) =>{
+    
     // get user id from the params
     const userid = req.params.id
     // find user from the DB
+    try {
     const user = await Users.findById(userid)
     //if not found the user
     if(!user){
@@ -53,16 +57,17 @@ export const getuserid = async (req , res) =>{
     // if find user passing the data to clint
     res.status(200).json(user)
     } catch (error) {
-        res.json(error)
+        next(error)
     }
     
 }
 
-export const blockuser = async (req ,res ) =>{
-    try {
+export const blockuser = async (req ,res ,next) =>{
+    
         // get user id in params
         const userid  = req.params.id
         //find user with using user id
+        try {
         const user = await Users.findById(userid)
         // if not found user 
         if(!user) {
@@ -80,7 +85,7 @@ export const blockuser = async (req ,res ) =>{
         }
       
     } catch (error) {
-        res.json(error)
+        next(error)
     }
 }
 

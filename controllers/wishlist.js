@@ -3,24 +3,32 @@ import Users from "../Models/usermodel.js";
 import Wishlist from "../Models/wishlistmodel.js";
 
 
-export const addWishlist = async (req , res) =>{
-    try {
-        const userid =req.id
-        const {id} = req.params
+export const addWishlist = async (req , res , next) =>{
 
-const user = await Users.findById(userid)
-if(!user){
-    return res.status(404).json("user not found")
-}        
-const prodect = await Products.findById(id)
-if(!prodect){
-    return res.status(404).json('product not found')
-}
-const exdata = await Wishlist.find({userId:user._id, productId : prodect._id})
-console.log(exdata);
- if(!exdata.length==0){ 
- return res.status(400).json('alredy added')
-  }
+     const userid =req.id
+
+     const {id} = req.params
+
+     try {
+
+     const user = await Users.findById(userid)
+
+     if(!user){
+     return res.status(404).json("user not found")
+     }        
+     const prodect = await Products.findById(id)
+
+     if(!prodect){
+     return res.status(404).json('product not found')
+     }
+
+     const exdata = await Wishlist.find({userId:user._id, productId : prodect._id})
+
+     if(!exdata.length==0){
+     return res.status(400).json('alredy added')
+     }
+
+  
     const newwishlist = await Wishlist.create({
         userId : userid,
         productId:id,
@@ -29,14 +37,14 @@ console.log(exdata);
     await user.save()
     res.status(200).json(user)
     } catch (error) {
-        res.json(error)
+        next(error)
     }
 }
 
-export const getWishlist =async (req , res)=>{
-    try{
+export const getWishlist =async (req , res ,next)=>{
+
         const userid = req.id
-        console.log(userid);
+    try{
         const user = await Users.findById(userid).populate({
             path:'wishlist',
             populate:{path : 'productId'}
@@ -50,36 +58,44 @@ export const getWishlist =async (req , res)=>{
           }
         res.status(200).json(user.wishlist)
     }catch (err){
-        res.json('this is err' + err)
+        next(err)
     }
 
 
 }
 
-export const deleteWishlist = async (req , res)=>{
-    try{
+export const deleteWishlist = async (req , res ,next)=>{
         const {id} = req.params
         const userid = req.id
+        try{
+
         const user = await Users.findById(userid)
+
         if(!user){
           return res.status(404).json('user not found')
         }
+
         const product = await Products.findById(id)
+
         if(!product){
             return res.status(404).json('product not found')
         }
-const wishlistitem = await Wishlist.findOneAndDelete(({userId : userid , productId : id}))
-console.log(wishlistitem._id)
-if(!wishlistitem){
-    return res.status(400).json("item not found")
-}
-const findindex = user.wishlist.findIndex((value) => value.equals(wishlistitem._id))
-if(findindex !== -1){
-    user.wishlist.splice(findindex,1)
-    await user.save()
-}
-res.status(200).json("wishlist deleted success fully")
+        
+        const wishlistitem = await Wishlist.findOneAndDelete(({userId : userid , productId : id}))
+
+        if(!wishlistitem){
+         return res.status(400).json("item not found")
+        }
+        const findindex = user.wishlist.findIndex((value) => value.equals(wishlistitem._id))
+
+        if(findindex !== -1){
+
+        user.wishlist.splice(findindex,1)
+
+         await user.save()
+        }
+        res.status(200).json("wishlist deleted success fully")
      }catch(err){
-        res.json(err)
+        next(err)
     }
 }

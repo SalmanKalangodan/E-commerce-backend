@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { mongo } from "mongoose";
 
 
 const newsale = new mongoose.Schema({
@@ -31,6 +31,11 @@ const newsale = new mongoose.Schema({
     qnt : {
         type: Number ,
         require : true
+    },
+    size : {
+        type : mongoose.Schema.Types.ObjectId,
+        ref : 'size',
+        require:true
     },
     date : {
         type : Date ,

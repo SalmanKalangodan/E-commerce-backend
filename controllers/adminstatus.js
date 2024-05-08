@@ -2,7 +2,7 @@ import Sales from "../Models/salesmodel.js"
 
 
 
-export const allstatus = async (req , res) =>{
+export const allstatus = async (req , res ,next) =>{
     try {
        // get sales products
         const datas = await Sales.aggregate([{$group : {_id : "$productId" , product_name : {$first :"$name"} ,product_price : {$first : '$price'},product_image : {$first : '$image'} ,total_qnt : {$sum :"$qnt"} , total_price : {$sum  : '$price'}}}])
@@ -12,19 +12,20 @@ export const allstatus = async (req , res) =>{
         }
        let total_revenue = 0
        let total_sell_qnt =0
+
        datas.forEach((value)=>{
-        console.log(value.total_price);
         total_revenue += value.total_price
         total_sell_qnt += value.total_qnt
        })
+
         res.json({datas , total : {total_revenue , total_sell_qnt}})
     } catch (error) { 
-        res.json('this is err' + error)
+        next(error)
     } 
 }  
 
   
-export const getsales =  async (req , res) =>{
+export const getsales =  async (req , res ,next) =>{
     try {
         // get all sales
         const sales = await Sales.find({})
@@ -41,20 +42,20 @@ export const getsales =  async (req , res) =>{
        })
         res.status(200).json([...sales ,{total_revenue , total_sell_qnt}])
     } catch (error) {
-        res.json(error)
+        next(error)
     }
 }
 
 
-export const filtersales = async (req , res) =>{
-    try {
+export const filtersales = async (req , res , next) =>{
+    
     //get start Date and end Date from req.query
-    const {startDate , endDate} = req.query
-    console.log(startDate);
+    const {startDate , endDate} = req.body
     // convert string to date
     const startDateObj = new Date(startDate);
     const endDateObj = new Date(endDate);
     // filter the sales use start date and end date
+    try {
     const sales = await Sales.find({date : {$gte : startDateObj , $lt  : endDateObj}})
     // if not found sales 
     if(sales.length == 0){
@@ -63,13 +64,12 @@ export const filtersales = async (req , res) =>{
     let total_revenue = 0
     let total_sell_qnt =0
     sales.forEach((value)=>{
-     console.log(value);
      total_revenue += value.totalprice
      total_sell_qnt += value.qnt
     })
     // give response to clite
     res.status(200).json([...sales , {total_revenue , total_sell_qnt}])  
-    } catch ({error}) {
-     res.json(error)   
+    } catch (error) {
+    next(error) 
     }
 }  

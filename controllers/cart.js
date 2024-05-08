@@ -1,17 +1,20 @@
 import Cart from "../Models/cartmodel.js";
 import Products from "../Models/productmodel.js";
+import Size from "../Models/sizes.js";
 import Users from "../Models/usermodel.js";
 
 
 // Add products to cart 
 
-export const AddCart = async (req, res) =>{
-  try{
+export const AddCart = async (req, res, next) =>{
+  
 // find user id in req object 
     const userid =req.id
 // find product id in params 
     const {id} = req.params
+    const sizeid = req.body.size
 // find user in by using id
+try{
     const user = await Users.findById(userid)
 // if not user
     if(!user) {
@@ -22,6 +25,11 @@ export const AddCart = async (req, res) =>{
 // if not find product
     if(!products){
       return res.status(404).json("products not found")
+    }
+    const size = await Size.findOne({_id : sizeid , inStock : true})
+
+    if(!size){
+      return res.status(400).json("out of stock")
     }
 // find alredy exixting data 
     const exdata  = await Cart.find({$and:[{productId:id} ,{ userId : userid}]})
@@ -35,15 +43,15 @@ export const AddCart = async (req, res) =>{
      const newcart = await Cart.create({
       userId : userid,
       productId: id,
-      qnt:1
+      qnt:1,
+      size:sizeid
      })
 // saving the cart id in user data
       user.cart.push(newcart._id)
      await user.save()
-
      return res.status(200).json("item added successfully")
     }catch (err){
-    res.json(err + "this is err")
+      next(err)
   }
 }
 
@@ -52,11 +60,12 @@ export const AddCart = async (req, res) =>{
 
 // Get cart products
 
-export const getCart =async (req , res) =>{
-  try{
+export const getCart =async (req , res , next) =>{
+  
 // get user id in params
   const id = req.params.id
 // find user in by using id and populate
+try{
   const user = await Users.findById(id).populate(
    {
     path : 'cart',
@@ -78,20 +87,21 @@ res.status(200).json(user.cart)
  
 
   }catch(err){
-    res.json("this err" + err)
+     next(err)
   }
 }
 
 
 // delete cart items
 
-export const deleteCart = async (req , res) =>{
-  try{
+export const deleteCart = async (req , res , next) =>{
+  
 // find product id from params
     const id  = req.params.id;
 // find user id from req object 
     const userid = req.id ;
-// find user by using id    
+// find user by using id
+try{    
     const user = await Users.findById(userid)
 // find product by using id
     const product = await Products.findById(id)
@@ -121,6 +131,6 @@ if(data !== -1){
 }
 res.status(200).json('remove item')
   }catch (err){
-    res.json(err)
+    next(err)
   }
 } 

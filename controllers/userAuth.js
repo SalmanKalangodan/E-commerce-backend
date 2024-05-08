@@ -9,19 +9,21 @@ import { usertoken } from "../Midleware/token.js";
 
 // user registration
 
-export const register = async (req , res)=>{
-    try{
-//  joi validation
+export const register = async (req , res , next)=>{
+    
+        //  joi validation
         const validata = await userSchema.validateAsync(req.body)
         const existuser = await Users.findOne({email: validata.email})
+
         if(existuser) {
          return res.status(400).json('user alredy exist')
         }
-// hasing password
+       // hasing password
+       try{
         bcrypt.hash(validata.password,10,(err,hash)=>{
             if (err) throw err
             const hashpassword = hash
-// user data storing DB
+        // user data storing DB
         const newuser = new Users({
             username:validata.username,
             email:validata.email,
@@ -35,37 +37,38 @@ export const register = async (req , res)=>{
 
     }
     catch(err){
-      res.status(400).json("validation faild")
+      next(err)
     }
 }
 
-export const login = async (req , res )=>{
-    try {
-// joi validation
+export const login = async (req , res , next)=>{
+        // joi validation
         // process.env.Key = crypto.randomBytes(64).toString('hex')
         const validata = await userlogin.validateAsync(req.body)
-// find user
+       // find user
+        try {
         const user = await Users.findOne({email : validata.email , isDeleted : false})
+
         if(!user){
           return  res.status(404).json('user not found')
         }
-//compare password
+        //compare password
         bcrypt.compare(validata.password , user.password,(err, result)=>{
-            if(err) throw err
-            if(result){
-// creating token
-            const token = jwt.sign({id:user._id,username:user.username } , process.env.Key)
-// set expaire time
-               const exdate = new Date (Date.now() + 60*1000)
-// passing token to clint cookie
-               res.cookie('access_token',token,{httpOnly :true ,expires: exdate })
-               return  res.json('login sussesfully')
-            }else{
-                return res.json('invalid password')
-            }
+        if(err) throw err
+        if(result){
+         // creating token
+        const token = jwt.sign({id:user._id,username:user.username } , process.env.Key)
+        // set expaire time
+        const exdate = new Date (Date.now() + 60*1000)
+        // passing token to clint cookie
+        res.cookie('access_token',token,{httpOnly :true ,expires: exdate })
+             return  res.json('login sussesfully')
+        }else{
+             return res.json('invalid password')
+        }
         })
         
       }catch(err){
-       res.json(err)
+       next(err)
       }
 }

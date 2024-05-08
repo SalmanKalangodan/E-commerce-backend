@@ -2,9 +2,7 @@ import express from "express" ;
 import dotenv from 'dotenv'; 
 import mongoose from "mongoose";
 import Authrout from './Routs/Authrout.js'
-import Products from "./Models/productmodel.js";
 import productsrout from './Routs/productsrout.js'
-import { AddCart } from "./controllers/cart.js";
 import cartrout from './Routs/cartrout.js'
 import wishlistrout from './Routs/wishlistrout.js'
 import paymentrout from './Routs/paymentrout.js'
@@ -12,6 +10,7 @@ import adminproductrout from './Routs/adminproductrout.js'
 import userAddress from './Routs/userAddressrout.js'
 import orderrout from './Routs/orderrout.js'
 import adminrout from './Routs/adminrout.js'
+import { errorHandler } from "./Midleware/error.js";
 
 
 dotenv.config();
@@ -34,6 +33,9 @@ app.use('/api/admin',adminproductrout)
 app.use('/api/user',userAddress)
 app.use('/api/user' ,orderrout)
 app.use('/api/admin' , adminrout)
+
+
+app.use(errorHandler)
 
 app.listen(PORT , ()=>console.log(`server is runnig on ${PORT}`))
 

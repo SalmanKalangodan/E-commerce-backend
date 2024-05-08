@@ -7,8 +7,8 @@ const router = express.Router()
 
 
 
-router.post('/:id/address',userAddress)
-router.get('/:id/address',getAddress)
+router.post('/:id/address',usertoken,userAddress)
+router.get('/:id/address',usertoken,getAddress)
 router.delete('/:id/address',usertoken,deleteAddress)
 
 export default router

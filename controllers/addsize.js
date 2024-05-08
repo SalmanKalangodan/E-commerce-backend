@@ -3,11 +3,11 @@ import Size from "../Models/sizes.js"
 
 
 
-export const addsize = async (req ,res) =>{
-    try {
+export const addsize = async (req ,res , next) =>{
         // get id from params 
         const id = req.params.id
         // find product 
+        try {
         const prodect  = await Products.findById(id)
         //if not found product 
         if(!prodect){
@@ -34,18 +34,18 @@ export const addsize = async (req ,res) =>{
         await prodect.save()
       res.json(newsize)
     } catch (error) {
-        res.json(error)
+        next(error)
     }
 }
 
 
-export const updatestock = async (req , res) =>{
-    try {
-        // get product using params 
+export const updatestock = async (req , res , next) =>{
+        // get id using params 
         const {id}  = req.params
         // get data from body
         const {stock} = req.body
         //find size using id
+        try {
         const size = await Size.findById(id)
         //not found size 
         if(!size){
@@ -55,18 +55,41 @@ export const updatestock = async (req , res) =>{
         const  zreo = size.stock + stock 
         //if the stock is zero 
         if(zreo<0){
-            return res.json('decrement only' + size.stock)
+            return res.json('decrement only  ' + size.stock)
         } 
         //update size
        await Size.updateOne({_id : id}, {$inc :{stock : stock}})
         res.status(200).json("stock update")
     } catch (error) {
-        res.json(error)
+        next(error)
     }
 }
 
 // delete the size 
 
-export const deletesize = async (req , res) =>{
+export const deletesize = async (req , res, next) =>{
     
+        // get size id from params 
+        const id = req.params.id
+        // delete size 
+        try {
+        const size =  await Size.findByIdAndDelete(id)
+        //if not find size
+        if(!size){
+            return res.status(404).json("size not found")
+        }
+        // also deleting size from products ref
+        const product = await Products.findById(size.productId)
+        // if not find product 
+        if(!product){
+            return res.status(404).json("product not found")
+        }
+        
+        product.sizes =  product.sizes.filter(value => value != id)
+        
+        await  product.save()
+        res.status(200).json("Size deleted successfully")
+    } catch (error) {
+        next(error)
+    }
 }

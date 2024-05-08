@@ -16,6 +16,10 @@ const productsSchema = new mongoose.Schema({
         type : Number,
         required: true
     },
+    // discountprice:{
+    //     type : Number,
+    //     required: true
+    // },
     image:{
         type: String,
         required: true
@@ -31,7 +35,11 @@ const productsSchema = new mongoose.Schema({
     sizes :  [{
         type : mongoose.Schema.Types.ObjectId,
         ref : 'size'
-    }]
+    }],
+    isHide:{
+        type : Boolean, 
+        default : false
+    }
 })
 
 const Products = mongoose.model('products' , productsSchema)

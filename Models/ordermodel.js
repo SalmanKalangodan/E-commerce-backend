@@ -7,11 +7,16 @@ const ordermodel = mongoose.Schema({
         ref:'Users',
         require:true
     },
-    productId: {
+    productId: [{
         type: mongoose.Schema.Types.ObjectId,
         ref:'products',
         require:true
-    },
+    }],
+    size : [{
+       type : mongoose.Schema.Types.ObjectId,
+       ref : 'size',
+       require:true
+    }],
     parchasedate : {
         type:Date,
         require:true,
@@ -37,6 +42,10 @@ const ordermodel = mongoose.Schema({
     address :{
         type : String,
         require:true
+    },
+    status :{
+      type :String,
+      default : "placed"
     }
 })
 

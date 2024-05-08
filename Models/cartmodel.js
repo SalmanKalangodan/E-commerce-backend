@@ -15,6 +15,11 @@ const cartmodel = new mongoose.Schema({
     qnt:{
         type:Number,
         default:1
+    },
+    size : {
+        type : mongoose.Schema.Types.ObjectId,
+        ref:'size',
+        require:true
     }
 })
 

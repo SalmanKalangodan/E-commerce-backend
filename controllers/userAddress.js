@@ -3,10 +3,10 @@ import Users from "../Models/usermodel.js"
 
 
 
-export const userAddress = async(req , res) => {
-try {
+export const userAddress = async(req , res , next) => {
     // get user id in params
     const userid = req.params.id
+    try {
     // find user in DB using by id
     const user = await Users.findById(userid)
     // if not found user
@@ -42,15 +42,16 @@ try {
 // return the response to the clint
 res.status(201).json('address saved')
 } catch (error) {
-    res.json(error)
+    next(error)
 }
 }
 
-export const getAddress = async (req , res) =>{
-    try {
+export const getAddress = async (req , res , next) =>{
+  
         //get user id from params
         const userid = req.params.id
         //find user in DB using id
+        try {
         const user = await Users.findById(userid).populate({
             path : 'address',
             populate : {path :'_id' }
@@ -67,19 +68,19 @@ export const getAddress = async (req , res) =>{
         res.status(200).json(user.address)
 
     } catch (error) {
-        res.json("this is"+error)
+        next(error)
     }
 }
 
 //delete the address 
 
-export const deleteAddress = async (req, res) =>{
-    try {
+export const deleteAddress = async (req, res , next) =>{
         // get user id from  req obj
         const userid = req.id
         //get address id from params
         const id = req.params.id
         //find user using id
+        try {
         const user = await Users.findById(userid)
         //if not fount user 
         if(!user){
@@ -101,6 +102,6 @@ export const deleteAddress = async (req, res) =>{
             await user.save()
         }
     } catch (error) {
-        res.json(error)
+        next(error)
     }
 }
