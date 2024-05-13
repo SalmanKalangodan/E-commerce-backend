@@ -2,8 +2,10 @@ import Order from "../Models/ordermodel.js"
 
 
 
+// get all orders 
+
 export const getallorders = async (req , res ,next) =>{
-    try {
+
         // get all orders 
         const orders = await Order.find({})
         //if not found orders 
@@ -11,13 +13,13 @@ export const getallorders = async (req , res ,next) =>{
             return res.status(404).json('order not found')
         }
         res.status(200).json(orders)
-    } catch (error) {
-        next(error)
-    }
 }
 
+
+// updating order status 
+
 export const updateStatus = async (req , res ,next) =>{
-    try {
+
         // get order id from params 
         const id = req.params.id
        
@@ -29,7 +31,4 @@ export const updateStatus = async (req , res ,next) =>{
         await Order.updateOne({_id : id} , {status : status})
        
         res.json('updated')
-    } catch (error) {
-        next(error)
-    }
 }

@@ -2,12 +2,12 @@ import Products from "../Models/productmodel.js"
 import Size from "../Models/sizes.js"
 
 
+// adding size and stock
 
 export const addsize = async (req ,res , next) =>{
         // get id from params 
         const id = req.params.id
         // find product 
-        try {
         const prodect  = await Products.findById(id)
         //if not found product 
         if(!prodect){
@@ -33,11 +33,11 @@ export const addsize = async (req ,res , next) =>{
         prodect.sizes.push(newsize._id)
         await prodect.save()
       res.json(newsize)
-    } catch (error) {
-        next(error)
-    }
 }
 
+
+
+// updating stock
 
 export const updatestock = async (req , res , next) =>{
         // get id using params 
@@ -45,7 +45,6 @@ export const updatestock = async (req , res , next) =>{
         // get data from body
         const {stock} = req.body
         //find size using id
-        try {
         const size = await Size.findById(id)
         //not found size 
         if(!size){
@@ -60,9 +59,6 @@ export const updatestock = async (req , res , next) =>{
         //update size
        await Size.updateOne({_id : id}, {$inc :{stock : stock}})
         res.status(200).json("stock update")
-    } catch (error) {
-        next(error)
-    }
 }
 
 // delete the size 
@@ -72,7 +68,7 @@ export const deletesize = async (req , res, next) =>{
         // get size id from params 
         const id = req.params.id
         // delete size 
-        try {
+      
         const size =  await Size.findByIdAndDelete(id)
         //if not find size
         if(!size){
@@ -89,7 +85,4 @@ export const deletesize = async (req , res, next) =>{
         
         await  product.save()
         res.status(200).json("Size deleted successfully")
-    } catch (error) {
-        next(error)
-    }
 }

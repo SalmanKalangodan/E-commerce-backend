@@ -3,18 +3,19 @@ import { adminLogin, blockuser, getuserid, listusers } from '../controllers/admi
 import { getallorders, updateStatus } from '../controllers/adminorders.js'
 import { allstatus, filtersales, getsales } from '../controllers/adminstatus.js'
 import { usertoken } from '../Midleware/token.js'
+import tryCatchMidileware from '../Midleware/trycatch.js'
 
 
 const router = express.Router()
 
-router.post('/login',adminLogin)
-router.get('/users' ,usertoken, listusers)
-router.get('/user/:id',usertoken,getuserid)
-router.patch('/user/:id' ,usertoken, blockuser)
-router.get('/orders' ,usertoken,getallorders )
-router.patch('/orders/status/:id' ,usertoken, updateStatus)
-router.get('/sales/report' ,usertoken, allstatus)
-router.get('/sales' ,usertoken, getsales )
-router.get('/sales/filter' ,usertoken, filtersales)
+router.post('/login',tryCatchMidileware(adminLogin))
+router.get('/users' ,usertoken, tryCatchMidileware(listusers))
+router.get('/user/:id',usertoken,tryCatchMidileware(getuserid))
+router.patch('/user/:id' ,usertoken, tryCatchMidileware(blockuser))
+router.get('/orders' ,usertoken,tryCatchMidileware(getallorders))
+router.patch('/orders/status/:id' ,usertoken, tryCatchMidileware(updateStatus))
+router.get('/sales/report' ,usertoken, tryCatchMidileware(allstatus))
+router.get('/sales' ,usertoken, tryCatchMidileware(getsales))
+router.get('/sales/filter' ,usertoken, tryCatchMidileware(filtersales))
 
 export default router

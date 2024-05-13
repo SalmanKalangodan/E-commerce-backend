@@ -26,7 +26,6 @@ const imageupload = (req , res , next)=>{
     try {
       if(req.file){
         const result = await cloudinary.uploader.upload(req.file.path)
-        console.log(result);
         req.cloudnaryimge = result.secure_url
       }
       next()

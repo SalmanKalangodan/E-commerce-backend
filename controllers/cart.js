@@ -14,7 +14,7 @@ export const AddCart = async (req, res, next) =>{
     const {id} = req.params
     const sizeid = req.body.size
 // find user in by using id
-try{
+
     const user = await Users.findById(userid)
 // if not user
     if(!user) {
@@ -50,9 +50,7 @@ try{
       user.cart.push(newcart._id)
      await user.save()
      return res.status(200).json("item added successfully")
-    }catch (err){
-      next(err)
-  }
+
 }
 
 
@@ -65,7 +63,7 @@ export const getCart =async (req , res , next) =>{
 // get user id in params
   const id = req.params.id
 // find user in by using id and populate
-try{
+
   const user = await Users.findById(id).populate(
    {
     path : 'cart',
@@ -85,10 +83,6 @@ if(!user.cart || user.cart.length == 0){
 
 res.status(200).json(user.cart)
  
-
-  }catch(err){
-     next(err)
-  }
 }
 
 
@@ -101,7 +95,7 @@ export const deleteCart = async (req , res , next) =>{
 // find user id from req object 
     const userid = req.id ;
 // find user by using id
-try{    
+   
     const user = await Users.findById(userid)
 // find product by using id
     const product = await Products.findById(id)
@@ -130,7 +124,4 @@ if(data !== -1){
   await user.save()
 }
 res.status(200).json('remove item')
-  }catch (err){
-    next(err)
-  }
 } 

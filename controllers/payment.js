@@ -18,7 +18,6 @@ let datas = {}
 
 export const payment = async (req , res ,next) =>{
     const userid = req.params.id
-    try {
     const user = await Users.findById(userid).populate({
         path:'cart',
         populate:{path : 'productId'} 
@@ -70,9 +69,6 @@ export const payment = async (req , res ,next) =>{
          }
 
          res.status(200).json({ message: "Stripe payment session created successfully", url: session.url }) 
-} catch (error) {
-    next(error)
-}
 
 }
 
@@ -81,7 +77,6 @@ export const success  = async (req , res , next) => {
 
     const {userid , user ,session} = datas
     const cartitem = user.cart
-    try {
     const prodectId = cartitem.map(value => value.productId._id)
     const address  = await Address.findOne({userId : userid ,defaultaddress : true })
 
@@ -133,8 +128,5 @@ export const success  = async (req , res , next) => {
 
    res.status(200).json("payment successful") 
 
-    } catch (error) {
-        next(error)
-    }
     
 } 

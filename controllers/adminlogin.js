@@ -5,29 +5,26 @@ import Users from '../Models/usermodel.js'
 
 dotenv.config()
 
-export const adminLogin = async (req ,res,next) =>{
-    
+
+// admin login
+export const adminLogin = async (req ,res) =>{
         // get data from the body
         const {email , password } = req.body
         // check the this admin
-        try {
         if(email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD){
            const exdate = new Date (Date.now() + 60*1000)
            const token = jwt.sign({email},process.env.KEY)
            res.cookie('access_token',token,{httpOnly :true ,expires: exdate })
            return  res.json('admin login sussesfully')
         }
-        // if not found
-    } catch (error) {
-        next(error)
-    }
+
 }
 
 
 // list all users
 
 export const listusers = async (req, res , next) =>{
-try {
+
     // get all users
     const users = await Users.find({}) 
     // if not users
@@ -36,9 +33,6 @@ try {
     }
     // passing the data to clint
     res.status(200).json(users)
-} catch (error) {
-    next(error)
-}    
 }
 
 // find user by id 
@@ -48,7 +42,6 @@ export const getuserid = async (req , res , next) =>{
     // get user id from the params
     const userid = req.params.id
     // find user from the DB
-    try {
     const user = await Users.findById(userid)
     //if not found the user
     if(!user){
@@ -56,18 +49,16 @@ export const getuserid = async (req , res , next) =>{
     }
     // if find user passing the data to clint
     res.status(200).json(user)
-    } catch (error) {
-        next(error)
-    }
     
 }
 
+//blocking users
 export const blockuser = async (req ,res ,next) =>{
     
         // get user id in params
         const userid  = req.params.id
         //find user with using user id
-        try {
+  
         const user = await Users.findById(userid)
         // if not found user 
         if(!user) {
@@ -83,9 +74,5 @@ export const blockuser = async (req ,res ,next) =>{
             await Users.updateOne({_id : userid} , {$set :{isDeleted : false}})
             res.status(200).json('unblock user') 
         }
-      
-    } catch (error) {
-        next(error)
-    }
 }
 

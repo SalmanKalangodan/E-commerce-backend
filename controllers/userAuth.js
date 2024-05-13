@@ -19,7 +19,7 @@ export const register = async (req , res , next)=>{
          return res.status(400).json('user alredy exist')
         }
        // hasing password
-       try{
+   
         bcrypt.hash(validata.password,10,(err,hash)=>{
             if (err) throw err
             const hashpassword = hash
@@ -34,19 +34,16 @@ export const register = async (req , res , next)=>{
     
         res.status(200).json("registration complited")
         })
-
-    }
-    catch(err){
-      next(err)
-    }
 }
+
+// user login
 
 export const login = async (req , res , next)=>{
         // joi validation
         // process.env.Key = crypto.randomBytes(64).toString('hex')
         const validata = await userlogin.validateAsync(req.body)
        // find user
-        try {
+       
         const user = await Users.findOne({email : validata.email , isDeleted : false})
 
         if(!user){
@@ -67,8 +64,4 @@ export const login = async (req , res , next)=>{
              return res.json('invalid password')
         }
         })
-        
-      }catch(err){
-       next(err)
-      }
 }

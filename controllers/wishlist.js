@@ -2,14 +2,14 @@ import Products from "../Models/productmodel.js";
 import Users from "../Models/usermodel.js";
 import Wishlist from "../Models/wishlistmodel.js";
 
-
+// add wishlist
 export const addWishlist = async (req , res , next) =>{
 
      const userid =req.id
 
      const {id} = req.params
 
-     try {
+     
 
      const user = await Users.findById(userid)
 
@@ -36,15 +36,13 @@ export const addWishlist = async (req , res , next) =>{
     user.wishlist.push(newwishlist._id)
     await user.save()
     res.status(200).json(user)
-    } catch (error) {
-        next(error)
-    }
+  
 }
-
+// get get wishlist
 export const getWishlist =async (req , res ,next)=>{
 
         const userid = req.id
-    try{
+  
         const user = await Users.findById(userid).populate({
             path:'wishlist',
             populate:{path : 'productId'}
@@ -57,17 +55,14 @@ export const getWishlist =async (req , res ,next)=>{
             return res.status(404).json("cart is empty")
           }
         res.status(200).json(user.wishlist)
-    }catch (err){
-        next(err)
-    }
 
 
 }
-
+// deleteWishlist
 export const deleteWishlist = async (req , res ,next)=>{
         const {id} = req.params
         const userid = req.id
-        try{
+      
 
         const user = await Users.findById(userid)
 
@@ -95,7 +90,4 @@ export const deleteWishlist = async (req , res ,next)=>{
          await user.save()
         }
         res.status(200).json("wishlist deleted success fully")
-     }catch(err){
-        next(err)
-    }
-}
+} 

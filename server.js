@@ -24,6 +24,7 @@ mongoose.connect(DB)
 .catch((err)=>console.log(err))
 
 app.use(express.json())
+app.use(errorHandler)
 app.use('/api/user',Authrout)
 app.use('/api/user',productsrout)
 app.use('/api/user', cartrout)
@@ -35,7 +36,7 @@ app.use('/api/user' ,orderrout)
 app.use('/api/admin' , adminrout)
 
 
-app.use(errorHandler)
+
 
 app.listen(PORT , ()=>console.log(`server is runnig on ${PORT}`))
 
