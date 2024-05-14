@@ -10,7 +10,7 @@ import adminproductrout from './Routs/adminproductrout.js'
 import userAddress from './Routs/userAddressrout.js'
 import orderrout from './Routs/orderrout.js'
 import adminrout from './Routs/adminrout.js'
-import cros from 'cros'
+import cros from 'cors'
 
 
 dotenv.config();
