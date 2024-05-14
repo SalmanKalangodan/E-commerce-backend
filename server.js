@@ -22,7 +22,9 @@ const DB = process.env.DB
 mongoose.connect(DB)
 .then(()=>console.log('db connect'))
 .catch((err)=>console.log(err))
-app.use(cros())
+app.use(cros({
+    
+}))
 app.use(express.json())
 app.use('/api/user',Authrout)
 app.use('/api/user',productsrout)
