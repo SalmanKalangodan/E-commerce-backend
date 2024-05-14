@@ -10,7 +10,7 @@ import adminproductrout from './Routs/adminproductrout.js'
 import userAddress from './Routs/userAddressrout.js'
 import orderrout from './Routs/orderrout.js'
 import adminrout from './Routs/adminrout.js'
-
+import cros from 'cros'
 
 
 dotenv.config();
@@ -22,7 +22,7 @@ const DB = process.env.DB
 mongoose.connect(DB)
 .then(()=>console.log('db connect'))
 .catch((err)=>console.log(err))
-
+app.use(cros())
 app.use(express.json())
 app.use('/api/user',Authrout)
 app.use('/api/user',productsrout)
