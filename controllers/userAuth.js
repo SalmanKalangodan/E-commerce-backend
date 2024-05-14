@@ -57,8 +57,8 @@ export const login = async (req , res , next)=>{
         const token = jwt.sign({id:user._id,username:user.username } , process.env.Key , {expiresIn : '15m'})
         const refreshToken = jwt.sign({id : user._id} ,process.env.REFRESHKEY)
 
-        res.cookie('access_token',token,{httpOnly :true ,expires : '15m' })
-        res.cookie('refresh_token',refreshToken,{httpOnly :true ,expires: '15m'})
+        res.cookie('access_token',token,{httpOnly :true })
+        res.cookie('refresh_token',refreshToken,{httpOnly :true })
              return  res.json('login sussesfully')
         }else{
              return res.json('invalid password')
