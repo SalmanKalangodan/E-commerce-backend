@@ -10,7 +10,7 @@ import adminproductrout from './Routs/adminproductrout.js'
 import userAddress from './Routs/userAddressrout.js'
 import orderrout from './Routs/orderrout.js'
 import adminrout from './Routs/adminrout.js'
-import { errorHandler } from "./Midleware/error.js";
+
 
 
 dotenv.config();
@@ -24,7 +24,6 @@ mongoose.connect(DB)
 .catch((err)=>console.log(err))
 
 app.use(express.json())
-app.use(errorHandler)
 app.use('/api/user',Authrout)
 app.use('/api/user',productsrout)
 app.use('/api/user', cartrout)

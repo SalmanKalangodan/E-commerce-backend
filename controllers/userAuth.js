@@ -54,14 +54,14 @@ export const login = async (req , res , next)=>{
         if(err) throw err
         if(result){
          // creating token
-        const token = jwt.sign({id:user._id,username:user.username } , process.env.Key)
-        // set expaire time
-        const exdate = new Date (Date.now() + 60*1000)
-        // passing token to clint cookie
-        res.cookie('access_token',token,{httpOnly :true ,expires: exdate })
+        const token = jwt.sign({id:user._id,username:user.username } , process.env.Key , {expiresIn : '60'})
+        const refreshToken = jwt.sign({id : user._id} ,process.env.REFRESHKEY)
+
+          res.header('authorization' , token)
+          res.header('refresh_token' , refreshToken)
              return  res.json('login sussesfully')
         }else{
              return res.json('invalid password')
         }
-        })
+        }) 
 }

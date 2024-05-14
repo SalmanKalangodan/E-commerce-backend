@@ -9,8 +9,8 @@ const tryCatchMidileware = (tryCatchHandler) => {
                 message: "error",
                 error_msg: error.message,
             })
+    
         }
-       next()
     }
 }
 
