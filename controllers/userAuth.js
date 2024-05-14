@@ -54,7 +54,7 @@ export const login = async (req , res , next)=>{
         if(err) throw err
         if(result){
          // creating token
-        const token = jwt.sign({id:user._id,username:user.username } , process.env.Key , {expiresIn : '60'})
+        const token = jwt.sign({id:user._id,username:user.username } , process.env.Key , {expiresIn : '15m'})
         const refreshToken = jwt.sign({id : user._id} ,process.env.REFRESHKEY)
 
           res.header('authorization' , token)

@@ -9,7 +9,7 @@ export const addWishlist = async (req , res , next) =>{
 
      const {id} = req.params
 
-     
+     const sizeid = req.body.size
 
      const user = await Users.findById(userid)
 
@@ -28,10 +28,16 @@ export const addWishlist = async (req , res , next) =>{
      return res.status(400).json('alredy added')
      }
 
+     const size = await Size.findOne({_id : sizeid , inStock : true})
   
+     if(!size){
+        return res.status(400).json("out of stock")
+      }
+      
     const newwishlist = await Wishlist.create({
         userId : userid,
         productId:id,
+        SizeId:sizeid
     })
     user.wishlist.push(newwishlist._id)
     await user.save()
