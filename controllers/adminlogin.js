@@ -15,7 +15,7 @@ export const adminLogin = async (req ,res) =>{
            const exdate = new Date (Date.now() + 60*1000)
            const token = jwt.sign({email},process.env.Key)
            res.cookie('access_token',token,{httpOnly :true ,expires: exdate })
-           return  res.json('admin login sussesfully')
+           return  res.json({messasge : 'admin login sussesfully' , token})
         }
 
 }
