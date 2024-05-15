@@ -8,7 +8,7 @@ const router = express.Router()
 
 
 router.post('/:id/cart',usertoken,tryCatchMidileware(AddCart))
-router.get('/:id/cart',usertoken,tryCatchMidileware(getCart))
+router.get('/cart',usertoken,tryCatchMidileware(getCart))
 router.delete('/:id/cart',usertoken,tryCatchMidileware(deleteCart))
 
 export default router
