@@ -16,6 +16,10 @@ export const adminLogin = async (req ,res) =>{
            const token = jwt.sign({email},process.env.Key)
            res.cookie('access_token',token,{httpOnly :true ,expires: exdate })
            return  res.json({messasge : 'admin login sussesfully' , token})
+        }else if (email !== process.env.ADMIN_EMAIL){
+           return res.status(404).json({messasge :'admin not found'})
+        }else if(password !== process.env.ADMIN_PASSWORD){
+            return res.status(400).json({messasge : 'password not match'})
         }
 
 }
