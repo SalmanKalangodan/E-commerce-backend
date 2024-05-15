@@ -20,7 +20,7 @@ export const getProductsid = async (req ,res , next)=>{
     const {id} = req.params
     // find product usnig id
     
-    const prodect = await Products.findById(id)
+    const prodect = await Products.findById(id).populate('sizes')
     if(!prodect){
         return res.status(404).json('product not found')
     }
