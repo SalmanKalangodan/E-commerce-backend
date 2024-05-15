@@ -24,6 +24,7 @@ const uploading = multer({
 const imageupload = (req , res , next)=>{
   uploading.single('image')(req , res , async err => {
     try {
+      console.log(req.file);
       if(req.file){
         const result = await cloudinary.uploader.upload(req.file.path)
         req.cloudnaryimge = result.secure_url
