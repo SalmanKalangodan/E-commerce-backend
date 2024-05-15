@@ -59,7 +59,7 @@ export const login = async (req , res , next)=>{
 
         res.cookie('access_token',token,{httpOnly :true })
         res.cookie('refresh_token',refreshToken,{httpOnly :true })
-             return  res.json({message : 'login sussesfully' , token , refreshToken})
+             return  res.json({message : 'login sussesfully' , token , refreshToken , username : user.username})
         }else{
              return res.json('invalid password')
         }

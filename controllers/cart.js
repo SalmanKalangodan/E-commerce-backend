@@ -7,7 +7,6 @@ import Users from "../Models/usermodel.js";
 // Add products to cart 
 
 export const AddCart = async (req, res, next) =>{
-  
 // find user id in req object 
     const userid =req.id
 // find product id in params 
