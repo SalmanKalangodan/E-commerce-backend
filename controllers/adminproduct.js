@@ -20,7 +20,7 @@ export const addproducts = async (req, res, next) =>{
         image : req.cloudnaryimge , 
         category : category
     })
-     newproduct.save()
+    await newproduct.save()
     res.status(200).json(newproduct)
 }
 
