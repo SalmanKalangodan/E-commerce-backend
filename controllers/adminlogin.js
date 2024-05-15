@@ -11,7 +11,7 @@ export const adminLogin = async (req ,res) =>{
         // get data from the body
         const {email , password } = req.body
         // check the this admin
-        if(email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD){
+        if(email === 'admin123@gmail.com' && password === 'admin123'){
            const exdate = new Date (Date.now() + 60*1000)
            const token = jwt.sign({email},process.env.KEY)
            res.cookie('access_token',token,{httpOnly :true ,expires: exdate })
