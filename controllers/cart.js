@@ -60,7 +60,7 @@ export const AddCart = async (req, res, next) =>{
 export const getCart =async (req , res , next) =>{
   
 // get user id in params
-  const id = req.params.id
+  const id = req.id
 // find user in by using id and populate
 
   const user = await Users.findById(id).populate(
