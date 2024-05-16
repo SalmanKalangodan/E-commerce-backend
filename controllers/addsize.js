@@ -44,6 +44,7 @@ export const updatestock = async (req , res , next) =>{
         const {id}  = req.params
         // get data from body
         const {stock} = req.body
+        
         //find size using id
         const size = await Size.findById(id)
         //not found size 
@@ -51,7 +52,7 @@ export const updatestock = async (req , res , next) =>{
             return res.status(404).json("size not found")
         }
         //check the stock is zero
-        const  zreo = size.stock + stock 
+        const  zreo = size.stock + +stock
         //if the stock is zero 
         if(zreo<0){
             return res.json('decrement only  ' + size.stock)
