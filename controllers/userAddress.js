@@ -5,7 +5,7 @@ import Users from "../Models/usermodel.js"
 
 export const userAddress = async(req , res , next) => {
     // get user id in params
-    const userid = req.params.id
+    const userid = req.id
     
     // find user in DB using by id
     const user = await Users.findById(userid)
@@ -14,9 +14,10 @@ export const userAddress = async(req , res , next) => {
         res.status(404).json('user not found')
     }
     // get address from the req.body
-    const {street , city , state , pincode , country} = req.body
+    const { firstname,lastname,email,street , city , state , pincode , country} = req.body
      // chack alredy saved the address
-     const savedaddress = await Address.findOne({userId: userid ,street,city,state,pincode, country})
+     const savedaddress = await Address.findOne({userId: userid ,firstname,lastname,email,street,city,state,pincode, country})
+     //
      if(savedaddress){
         return res.status(400).json('alredy saved')
      }
@@ -28,6 +29,9 @@ export const userAddress = async(req , res , next) => {
     //store the data to DB
     const newAddress = new Address({
       userId : userid,
+      firstname,
+      lastname,
+      email,
       street : street,
       city : city,
       state : state,
