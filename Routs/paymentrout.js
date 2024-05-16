@@ -6,7 +6,7 @@ import tryCatchMidileware from '../Midleware/trycatch.js';
 
 const router = express.Router()
 
-router.post('/payment/:id',usertoken,tryCatchMidileware(payment))
+router.post('/payment',usertoken,tryCatchMidileware(payment))
 router.get('/payment/success',usertoken,tryCatchMidileware(success))
 
 export default router
