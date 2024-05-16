@@ -9,7 +9,7 @@ const router = express.Router()
 
 
 router.post('/address',usertoken,tryCatchMidileware(userAddress))
-router.get('/:id/address',usertoken,tryCatchMidileware(getAddress))
+router.get('/address',usertoken,tryCatchMidileware(getAddress))
 router.put('/:id/address',usertoken,tryCatchMidileware(setDefaultAddress))
 router.delete('/:id/address',usertoken,tryCatchMidileware(deleteAddress))
 
