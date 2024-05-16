@@ -17,7 +17,7 @@ let datas = {}
 
 
 export const payment = async (req , res ,next) =>{
-    const userid = req.params.id
+    const userid = req.id
     const user = await Users.findById(userid).populate({
         path:'cart',
         populate:{path : 'productId'} 
