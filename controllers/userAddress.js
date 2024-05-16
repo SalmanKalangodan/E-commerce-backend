@@ -51,7 +51,7 @@ res.status(201).json('address saved')
 export const getAddress = async (req , res , next) =>{
   
         //get user id from params
-        const userid = req.params.id
+        const userid = req.id
         //find user in DB using id
     
         const user = await Users.findById(userid).populate({
