@@ -102,3 +102,22 @@ export const deleteAddress = async (req, res , next) =>{
             await user.save()
         }
 }
+
+export const setDefaultAddress = async(req ,res) =>{
+   //get user id 
+   const userId = req.id
+   //get address Id
+   const addressId = req.params.id
+   //get find user using id 
+   const user = await Users.findById(userId)
+   // if not found the user 
+   if(!user){
+    return res.status(404).json('user not found')
+   }
+   //get address using userid 
+    await Address.updateOne({_id : addressId , userId} , {defaultaddress : true})
+    await Address.updateMany({_id :{$ne:addressId}  , userId} , {defaultaddress : false})
+   // if not found address 
+   return res.json('updated')
+
+}
