@@ -8,6 +8,18 @@ const newAddress  = new mongoose.Schema({
         ref:'Users',
         require : true
     },
+    firstname : {
+        type:String,
+        require : true
+    },
+    lastname:{
+        type : String, 
+        require: true
+    },
+    email :{
+       type : String , 
+       require : true
+    },
     street : {
         type : String, 
         require : true
