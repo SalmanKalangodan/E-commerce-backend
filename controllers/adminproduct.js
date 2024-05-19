@@ -137,10 +137,10 @@ export const hideproducts = async(req , res , next) =>{
         //update product
        
         if(prodect.isHide === true){
-             await Products.updateOne({id} , {isHide : data})
-             return  res.status(200).json("product hided")
+             await Products.updateOne({id} , {isHide : false})
+             return  res.status(200).json("product unhided")
         }else{
-            await Products.updateOne({_id : id} , {isHide : data})
+            await Products.updateOne({_id : id} , {isHide : true})
             return  res.status(200).json("product hided")
         }
 }
