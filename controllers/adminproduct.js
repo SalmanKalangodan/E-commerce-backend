@@ -128,10 +128,15 @@ export const hideproducts = async(req , res , next) =>{
         // get product id 
         const id = req.params.id
         //get data form body
-        const data = req.body.hide
+       const prodect = await Products.findById(id)
+       // not found product 
+       if(!prodect){
+         return res.status(404).json("product not found")
+       }
+       
         //update product
        
-        if(data === true){
+        if(prodect.isHide === true){
              await Products.updateOne({id} , {isHide : data})
              return  res.status(200).json("product hided")
         }else{

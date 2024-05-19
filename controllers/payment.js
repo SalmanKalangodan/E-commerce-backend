@@ -77,18 +77,19 @@ export const success  = async (req , res , next) => {
 
     const {userid , user ,session} = datas
     const cartitem = user.cart
-    const prodectId = cartitem.map(value => value.productId._id)
+    const prodectIds = cartitem.map(value => value.productId._id)
     const address  = await Address.findOne({userId : userid ,defaultaddress : true })
-
+    
     const  order = new Order({
         userid : userid,
-        prodectId : prodectId,
+        prodectId : prodectIds,
         orderId : session.id,
         paymentId : `demo ${Date.now()}`,
         totalprice : session.amount_total,
         address : address
     })
      await order.save()
+     
      cartitem.forEach(async value => {
         
          const newsale=  new Sales({
