@@ -42,7 +42,7 @@ export const addWishlist = async (req , res , next) =>{
     })
     user.wishlist.push(newwishlist._id)
     await user.save()
-    res.status(200).json(user.wishlist)
+    res.status(200).json(user.wishlist.productId)
   
 }
 // get get wishlist
