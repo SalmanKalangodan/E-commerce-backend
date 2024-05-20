@@ -7,7 +7,7 @@ import tryCatchMidileware from '../Midleware/trycatch.js'
 const router = express.Router()
 
 router.post('/:id/wishlists',usertoken,tryCatchMidileware(addWishlist))
-router.get('/:id/wishlists',usertoken,tryCatchMidileware(getWishlist))
+router.get('/wishlists',usertoken,tryCatchMidileware(getWishlist))
 router.delete('/:id/wishlists',usertoken,tryCatchMidileware(deleteWishlist))
 
 export default router

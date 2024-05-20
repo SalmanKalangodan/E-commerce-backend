@@ -10,7 +10,7 @@ const ordermodel = mongoose.Schema({
     productId: [{
         type: mongoose.Schema.Types.ObjectId,
         ref:'products',
-        require:true
+        require: true
     }],
     size : [{
        type : mongoose.Schema.Types.ObjectId,
