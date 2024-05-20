@@ -61,7 +61,7 @@ export const getWishlist =async (req , res ,next)=>{
           if(!user.wishlist || user.wishlist.length == 0){
             return res.status(404).json("cart is empty")
           }
-        res.status(200).json(user.wishlist.productId)
+        res.status(200).json(user.wishlist)
 
 
 }
