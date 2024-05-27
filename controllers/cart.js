@@ -206,3 +206,23 @@ export const  Cartdecrement = async (req, res) =>{
     return res.json({ message: 'Item qnt is 1' });
   }
 }
+
+
+export const cartTotal = async(req , res) =>{
+  // find user id
+  const id = req.id
+  // find user using by id 
+  const user = await Users.findById(id).populate(
+    {
+      path : 'cart',
+      populate: {path: 'productId' }
+    }
+  )
+  let Total =  0
+  // calculate all total
+  user.cart.forEach((value)=>{
+    Total += value.qnt*value.productId.price
+  })
+  res.json(Total)
+}
+
