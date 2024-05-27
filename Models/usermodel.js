@@ -17,6 +17,9 @@ const userSchama = new mongoose.Schema({
     profileImg:{
         type : String,
     },
+    phone : {
+        type : Number,
+    },
     accountCreatedDate:{
         type:Date,
         required:true,

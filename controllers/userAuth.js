@@ -65,3 +65,52 @@ export const login = async (req , res , next)=>{
         }
         }) 
 }
+
+
+export const EditProfaile = async(req , res) =>{
+  //get user Id 
+
+  const userId = req.id
+
+  //find user Using userId
+  
+  const user = await Users.findById(userId)
+  
+  // if not find user 
+
+  if(!user){
+    return res.status(404).json("user not found")
+  }
+
+  const {username , phone } = req.body
+
+  if(username){
+   await Users.findOneAndUpdate({_id : userId} , {username})
+  }
+  if(phone){
+    await Users.findOneAndUpdate({_id : userId} , {phone})
+  }
+  if(req.cloudnaryimge){
+    await Users.findOneAndUpdate({_id : userId} , {profileImg : req.cloudnaryimge})
+  }
+
+  return res.status(200).json("profile edited")
+}
+
+
+export const GetProfile = async (req ,res) =>{
+  // get user id 
+  const userId = req.id
+
+  // find user using id 
+
+  const user = await Users.findById(userId)
+
+  // if not find user 
+
+  if(!user){
+    return res.status(404).json('user not found')
+  }
+
+  return res.status(200).json({username : user.username , email : user.email , phone : user.phone , profileimg : user.profileImg})
+}
