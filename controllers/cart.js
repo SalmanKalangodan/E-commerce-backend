@@ -124,3 +124,85 @@ if(data !== -1){
 }
 res.status(200).json('remove item')
 } 
+
+
+
+export const  CartIncrement = async (req, res) =>{
+  // get product id using params
+
+  const productId = req.params.id
+
+  //get userId 
+  
+  const userId = req.id
+
+  //find user 
+  
+  const user = await Users.findById(userId)
+  // if noot found 
+  if(!user){
+    return res.status(404).json('user not found')
+  }
+
+  // find product using id
+
+  const product = await Products.findById(productId)
+
+  // if not find product 
+
+  if(!product){
+    return res.status(404).json('product not found')
+  }
+  
+  // update cart 
+
+  const cart = await Cart.findOneAndUpdate({userId : userId , productId : productId} , {$inc:{qnt : 1}})
+
+  return res.json('incremented')
+}
+
+
+export const  Cartdecrement = async (req, res) =>{
+  // get product id using params
+
+  const productId = req.params.id
+
+  //get userId 
+  
+  const userId = req.id
+
+  //find user 
+  
+  const user = await Users.findById(userId)
+  // if noot found 
+  if(!user){
+    return res.status(404).json('user not found')
+  }
+
+  // find product using id
+
+  const product = await Products.findById(productId)
+
+  // if not find product 
+
+  if(!product){
+    return res.status(404).json('product not found')
+  }
+  
+  // update cart 
+
+  const cartItem = await Cart.findOne({ userId: userId, productId: productId });
+  if (!cartItem) {
+    return res.status(404).json('Cart item not found');
+  }
+
+  // Check if the quantity is greater than 1 before decrementing
+  if (cartItem.qnt > 1) {
+    cartItem.qnt -= 1;
+    await cartItem.save();
+    return res.json({ message: 'Decrement successful', cartItem });
+  } else {
+    // If the quantity is 1, you might want to remove the item from the cart
+    return res.json({ message: 'Item qnt is 1' });
+  }
+}

@@ -24,7 +24,6 @@ export const usertoken = (req, res , next) =>{
                     }
                     
                     const token = jwt.sign({id: redecode.id} , process.env.Key ,{expiresIn : 600})
-                    console.log('this is refresh', token)
                     req.id = redecode.id 
                     res.header('authorization', token)
                    return next()
