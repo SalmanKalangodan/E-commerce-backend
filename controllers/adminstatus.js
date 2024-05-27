@@ -1,5 +1,5 @@
 import Sales from "../Models/salesmodel.js"
-
+import { startOfWeek, endOfWeek ,subWeeks } from 'date-fns';
 
 // get all sales
 export const allstatus = async (req , res ,next) =>{
@@ -62,3 +62,34 @@ export const filtersales = async (req , res , next) =>{
     // give response to clite
     res.status(200).json([...sales , {total_revenue , total_sell_qnt}])  
 }  
+
+
+
+
+export const WeekSales = async (req, res, next) => {
+    const weeks = 7; // Number of weeks to report
+    const currentDate = new Date();
+
+    let salesData = [];
+    for (let i = 0; i < weeks; i++) {
+      const weekStart = startOfWeek(subWeeks(currentDate, i), { weekStartsOn: 1 });
+      const weekEnd = endOfWeek(subWeeks(currentDate, i), { weekStartsOn: 1 });
+
+      const sales = await Sales.find({ date: { $gte: weekStart, $lt: weekEnd } });
+
+      let total_revenue = 0;
+      let total_sell_qnt = 0;
+      sales.forEach(sale => {
+        total_revenue += sale.totalprice;
+        total_sell_qnt += sale.qnt;
+      });
+
+      salesData.push({
+        week: `${weekStart.toISOString().split('T')[0]} - ${weekEnd.toISOString().split('T')[0]}`,
+        total_revenue,
+        total_sell_qnt,
+      });
+    }
+
+    res.status(200).json(salesData.reverse());
+}
