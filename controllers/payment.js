@@ -127,7 +127,7 @@ export const success  = async (req , res , next) => {
    }
    await Cart.deleteMany({_id : {$in : cartitem }})
 
-   res.status(200).json("payment successful") 
+   res.status(200).json({message: "payment successful" , orderId : orderId , amount : newsale.totalprice}) 
 
     
 } 

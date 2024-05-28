@@ -1,10 +1,7 @@
 import Users from "../Models/usermodel.js";
-import bcrypt, { hash } from 'bcrypt';
 import jwt from 'jsonwebtoken'
-import crypto from 'crypto'
 import userSchema, { userlogin } from "../validation/usersvalidation.js";
-import Products from "../Models/productmodel.js";
-import { usertoken } from "../Midleware/token.js";
+
 
 
 // user registration
@@ -83,7 +80,7 @@ export const EditProfaile = async(req , res) =>{
   }
 
   const {username , phone } = req.body
-
+  
   if(username){
    await Users.findOneAndUpdate({_id : userId} , {username})
   }
