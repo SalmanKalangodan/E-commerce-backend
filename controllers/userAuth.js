@@ -1,7 +1,7 @@
 import Users from "../Models/usermodel.js";
 import jwt from 'jsonwebtoken'
 import userSchema, { userlogin } from "../validation/usersvalidation.js";
-
+import bcrypt from 'bcrypt'
 
 
 // user registration
