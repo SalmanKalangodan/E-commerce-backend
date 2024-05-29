@@ -7,16 +7,16 @@ const ordermodel = mongoose.Schema({
         ref:'Users',
         require:true
     },
-    productId: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref:'products',
+    productId: {
+        type : mongoose.Schema.Types.ObjectId,
+        ref : 'Product',
         require: true
-    }],
-    size : [{
+    },
+    size : {
        type : mongoose.Schema.Types.ObjectId,
        ref : 'size',
        require:true
-    }],
+    },
     parchasedate : {
         type:Date,
         require:true,
