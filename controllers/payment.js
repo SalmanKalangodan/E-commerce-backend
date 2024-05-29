@@ -54,7 +54,7 @@ export const payment = async (req , res ,next) =>{
                 payment_method_types: ["card"],
                 line_items: lineItems,
                 mode: "payment",
-                success_url: "http://localhost:5173/payment/success", // Replace with actual success URL
+                success_url: "https://front-end-huou.vercel.app/payment/success", // Replace with actual success URL
                 cancel_url: "https://example.com/cancel", // Replace with actual cancel URL
             });
   
