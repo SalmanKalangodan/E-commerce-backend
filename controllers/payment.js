@@ -74,76 +74,86 @@ export const payment = async (req , res ,next) =>{
 
 
 export const success = async (req, res, next) => {
-    const { userid, user, session } = datas;
-    const cartitem = user.cart;
-    const prodectIds = cartitem.map(value => value.productId._id);
-  
-    // Fetch the default address for the user
-    const address = await Address.findOne({ userId: userid, defaultaddress: true });
-  
-    // Create a new order
-    const order = new Order({
-      userid: userid,
-      prodectId: prodectIds,
-      orderId: session.id,
-      paymentId: `demo ${Date.now()}`,
-      totalprice: session.amount_total,
-      address: address
-    });
-  
-    // Save the order to the database
-    await order.save();
-  
-    // Process each cart item
-    cartitem.forEach(async value => {
-      // Create a new sale entry
-      const newsale = new Sales({
-        userId: value.userId,
-        productId: value.productId._id,
-        name: value.productId.title,
-        image: value.productId.image,
-        price: value.productId.price,
-        totalprice: value.productId.price * value.qnt,
-        qnt: value.qnt,
-        size: value.size
+    try {
+      const { userid, user, session } = datas;
+      const cartitem = user.cart;
+      const productIds = cartitem.map(value => value.productId._id);
+      const sizes = cartitem.map(value => value.size);
+      
+      // Fetch the default address for the user
+      const address = await Address.findOne({ userId: userid, defaultaddress: true });
+      if (!address) {
+        return res.status(404).json('Default address not found');
+      }
+      
+      // Create a new order
+      const order = new Order({
+        userId: userid,
+        productId: productIds,
+        size: sizes,
+        orderId: session.id,
+        totalprice: session.amount_total / 100, // Convert from cents to dollars
+        paymentId: `demo ${Date.now()}`,
+        address: address.fullAddress // Assuming address has a `fullAddress` field
       });
   
-      // Update the stock for the product size
-      const updateStock = await Size.findById(value.size);
-      if (!updateStock) {
-        return res.status(404).json("Stock not found");
+      // Save the order to the database
+      await order.save();
+  
+      // Process each cart item
+      for (const item of cartitem) {
+        const newsale = new Sales({
+          userId: item.userId,
+          productId: item.productId._id,
+          name: item.productId.title,
+          image: item.productId.image,
+          price: item.productId.price,
+          totalprice: item.productId.price * item.qnt,
+          qnt: item.qnt,
+          size: item.size
+        });
+  
+        // Update the stock for the product size
+        const updateStock = await Size.findById(item.size);
+        if (!updateStock) {
+          return res.status(404).json('Stock not found');
+        }
+        updateStock.stock = updateStock.stock - item.qnt;
+        if (updateStock.stock <= 0) {
+          newsale.qnt = updateStock.stock;
+          updateStock.inStock = false;
+        }
+  
+        // Save the updated stock and sale entry
+        await updateStock.save();
+        await newsale.save();
       }
-      updateStock.stock = updateStock.stock - value.qnt;
-      if (updateStock.stock <= 0) {
-        newsale.qnt = updateStock.stock;
-        updateStock.inStock = false;
+  
+      // Update the user's orders and clear the cart
+      const orderId = order._id;
+      const amount = order.totalprice;
+      const userUpdate = await Users.findOneAndUpdate(
+        { _id: userid },
+        {
+          $push: { Orders: orderId },
+          $set: { cart: [] }
+        },
+        { new: true }
+      );
+  
+      if (!userUpdate) {
+        return res.status(500).json('Failed to update user data');
       }
   
-      // Save the updated stock and sale entry
-      await updateStock.save();
-      await newsale.save();
-    });
+      // Delete all cart items for the user
+      await Cart.deleteMany({ _id: { $in: cartitem.map(item => item._id) } });
   
-    // Update the user's orders and clear the cart
-    const orderId = order._id;
-    const amount = order.totalprice;
-    const userupdate = await Users.findOneAndUpdate(
-      { _id: userid },
-      {
-        $push: { Orders: orderId },
-        $set: { cart: [] }
-      },
-      { new: true }
-    );
+      // Respond with the order ID and amount
+      res.status(200).json({ message: 'Payment successful', orderId: orderId, amount: amount });
   
-    if (!userupdate) {
-      return res.status(500).json('Failed to update user data');
+    } catch (error) {
+      console.error('Error processing payment success:', error);
+      res.status(500).json({ message: 'Internal server error' });
     }
-  
-    // Delete all cart items for the user
-    await Cart.deleteMany({ _id: { $in: cartitem } });
-  
-    // Respond with the order ID and amount
-    res.status(200).json({ message: "Payment successful", orderId: orderId, amount: amount });
   };
   
