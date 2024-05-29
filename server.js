@@ -23,8 +23,8 @@ mongoose.connect(DB)
 .then(()=>console.log('db connect'))
 .catch((err)=>console.log(err))
 app.use(cros({
-    origin : 'https://front-end-huou.vercel.app',
-    credentials : true
+    // origin : 'https://front-end-huou.vercel.app',
+    // credentials : true
 }))
 app.use(express.json())
 app.use('/api/user',Authrout)
