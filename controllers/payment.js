@@ -73,61 +73,77 @@ export const payment = async (req , res ,next) =>{
 }
 
 
-export const success  = async (req , res , next) => {
-
-    const {userid , user ,session} = datas
-    const cartitem = user.cart
-    const prodectIds = cartitem.map(value => value.productId._id)
-    const address  = await Address.findOne({userId : userid ,defaultaddress : true })
-    
-    const  order = new Order({
-        userid : userid,
-        prodectId : prodectIds,
-        orderId : session.id,
-        paymentId : `demo ${Date.now()}`,
-        totalprice : session.amount_total,
-        address : address
-    })
-     await order.save()
-     
-     cartitem.forEach(async value => {
-        
-         const newsale=  new Sales({
-            userId : value.userId ,
-            productId : value.productId._id,
-            name : value.productId.title,
-            image : value.productId.image,
-            price : value.productId.price,
-            totalprice : value.productId.price*value.qnt,
-            qnt : value.qnt,
-            size : value.size
-         })
-         const updateStock = await Size.findById(value.size)
-         if(!updateStock){
-           return res.status(404).json("stock not found")
-         }
-         updateStock.stock = updateStock.stock - value.qnt
-         if(updateStock.stock <= 0){
-            newsale.qnt = updateStock.stock
-            updateStock.inStock = false
-         }
-        await updateStock.save()
-        await newsale.save()
-     });
-         
-      const orderId = order._id
-      const amount = order.totalprice
-   const userupdate  = await Users.findOneAndUpdate({_id : userid},{
-    $push:{Orders : orderId},
-    $set:{cart : []}
-   },
-   {new : true})
-   if(!userupdate){
-   res.status(500).json('faild update userData')
-   }
-   await Cart.deleteMany({_id : {$in : cartitem }})
-
-   res.status(200).json({message: "payment successful" , orderId : orderId ,amount : amount }) 
-
-    
-} 
+export const success = async (req, res, next) => {
+    const { userid, user, session } = datas;
+    const cartitem = user.cart;
+    const prodectIds = cartitem.map(value => value.productId._id);
+  
+    // Fetch the default address for the user
+    const address = await Address.findOne({ userId: userid, defaultaddress: true });
+  
+    // Create a new order
+    const order = new Order({
+      userid: userid,
+      prodectId: prodectIds,
+      orderId: session.id,
+      paymentId: `demo ${Date.now()}`,
+      totalprice: session.amount_total,
+      address: address
+    });
+  
+    // Save the order to the database
+    await order.save();
+  
+    // Process each cart item
+    cartitem.forEach(async value => {
+      // Create a new sale entry
+      const newsale = new Sales({
+        userId: value.userId,
+        productId: value.productId._id,
+        name: value.productId.title,
+        image: value.productId.image,
+        price: value.productId.price,
+        totalprice: value.productId.price * value.qnt,
+        qnt: value.qnt,
+        size: value.size
+      });
+  
+      // Update the stock for the product size
+      const updateStock = await Size.findById(value.size);
+      if (!updateStock) {
+        return res.status(404).json("Stock not found");
+      }
+      updateStock.stock = updateStock.stock - value.qnt;
+      if (updateStock.stock <= 0) {
+        newsale.qnt = updateStock.stock;
+        updateStock.inStock = false;
+      }
+  
+      // Save the updated stock and sale entry
+      await updateStock.save();
+      await newsale.save();
+    });
+  
+    // Update the user's orders and clear the cart
+    const orderId = order._id;
+    const amount = order.totalprice;
+    const userupdate = await Users.findOneAndUpdate(
+      { _id: userid },
+      {
+        $push: { Orders: orderId },
+        $set: { cart: [] }
+      },
+      { new: true }
+    );
+  
+    if (!userupdate) {
+      return res.status(500).json('Failed to update user data');
+    }
+  
+    // Delete all cart items for the user
+    await Cart.deleteMany({ _id: { $in: cartitem } });
+  
+    // Respond with the order ID and amount
+    res.status(200).json({ message: "Payment successful", orderId: orderId, amount: amount });
+  };
+  
