@@ -92,9 +92,12 @@ export const success = async (req, res, next) => {
         productId: productIds,
         size: sizes,
         orderId: session.id,
-        totalprice: session.amount_total / 100, // Convert from cents to dollars
+        totalprice: (session.amount_total / 100).toFixed(2), // Convert from cents to dollars and format to two decimal places
         paymentId: `demo ${Date.now()}`,
-        address: address.fullAddress // Assuming address has a `fullAddress` field
+        address: address.fullAddress, // Assuming address has a `fullAddress` field as a string
+        status: 'placed',
+        parchasedate: new Date(), // Ensure the date is correctly set
+        ordertime: new Date().toTimeString().split(' ')[0] // Set the order time correctly
       });
   
       // Save the order to the database
@@ -118,9 +121,9 @@ export const success = async (req, res, next) => {
         if (!updateStock) {
           return res.status(404).json('Stock not found');
         }
-        updateStock.stock = updateStock.stock - item.qnt;
+        updateStock.stock -= item.qnt;
         if (updateStock.stock <= 0) {
-          newsale.qnt = updateStock.stock;
+          updateStock.stock = 0;
           updateStock.inStock = false;
         }
   
@@ -130,12 +133,10 @@ export const success = async (req, res, next) => {
       }
   
       // Update the user's orders and clear the cart
-      const orderId = order._id;
-      const amount = order.totalprice;
       const userUpdate = await Users.findOneAndUpdate(
         { _id: userid },
         {
-          $push: { Orders: orderId },
+          $push: { Orders: order._id },
           $set: { cart: [] }
         },
         { new: true }
@@ -149,7 +150,7 @@ export const success = async (req, res, next) => {
       await Cart.deleteMany({ _id: { $in: cartitem.map(item => item._id) } });
   
       // Respond with the order ID and amount
-      res.status(200).json({ message: 'Payment successful', orderId: orderId, amount: amount });
+      res.status(200).json({ message: 'Payment successful', orderId: order._id, amount: order.totalprice });
   
     } catch (error) {
       console.error('Error processing payment success:', error);
