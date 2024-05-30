@@ -8,7 +8,6 @@ export const getallorders = async (req , res ,next) =>{
 
         // get all orders 
         const orders = await Order.find({}).populate({
-                path:'Users',
                 path: 'userId',
                 model: 'Users',
                 populate: {
