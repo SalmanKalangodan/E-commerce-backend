@@ -38,3 +38,23 @@ export const updateStatus = async (req , res ,next) =>{
        
         res.json('updated')
 }
+
+
+export const SingleOrders = async (req , res) =>{
+        // get order id in in params 
+        const id = req.params.id
+        // find order using order id
+        const order = await Order.findById(id).populate({
+                path: 'userId',
+                model: 'Users'
+            }).populate({
+                path: 'productId',
+                model: 'products'
+            })
+        //if not found order 
+        if(!order){
+                res.status(404).json('order not found')
+        }
+        // if find oreder 
+        res.status(200).json(order)
+}
