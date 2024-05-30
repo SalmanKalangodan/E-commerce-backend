@@ -5,7 +5,7 @@ import Users from "../Models/usermodel.js"
 
 export const getorders = async (req , res ,next) =>{
         //get user using params
-        const userid = req.params.id
+        const userid = req.id
         //find user using id
       
         const user = await Users.findById(userid).populate({

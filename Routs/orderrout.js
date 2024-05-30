@@ -7,7 +7,7 @@ import tryCatchMidileware from '../Midleware/trycatch.js'
 const router = express.Router()
 
 
-router.get('/:id/order', usertoken,tryCatchMidileware(getorders))
+router.get('/order', usertoken,tryCatchMidileware(getorders))
 
 
 export default router
