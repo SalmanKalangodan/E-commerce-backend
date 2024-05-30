@@ -17,7 +17,7 @@ export const getorders = async (req , res ,next) =>{
             return res.status(404).json('not found user')
         }
         // check the order is empty
-        if(!user.Orders || user.Orders.length !==0 ){
+        if(!user.Orders || user.Orders.length ==0 ){
             return res.status(200).json("you have no orders")
         }
         // if the orders not empty
