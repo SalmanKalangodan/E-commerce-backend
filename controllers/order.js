@@ -12,7 +12,7 @@ export const getorders = async (req , res ,next) =>{
             path:'Orders',
             populate :{
                 path: 'productId',
-                model: 'Product'
+                model: 'products'
             }
         })
         //if not find user
