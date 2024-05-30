@@ -7,7 +7,15 @@ import Order from "../Models/ordermodel.js"
 export const getallorders = async (req , res ,next) =>{
 
         // get all orders 
-        const orders = await Order.find({})
+        const orders = await Order.find({}).populate({
+                path:'Users',
+                path: 'userId',
+                model: 'Users',
+                populate: {
+                    path: 'productId',
+                    model: 'products'
+                }
+            })
         //if not found orders 
         if(!orders){
             return res.status(404).json('order not found')
