@@ -9,11 +9,10 @@ export const getallorders = async (req , res ,next) =>{
         // get all orders 
         const orders = await Order.find({}).populate({
                 path: 'userId',
-                model: 'Users',
-                populate: {
-                    path: 'productId',
-                    model: 'products'
-                }
+                model: 'Users'
+            }).populate({
+                path: 'productId',
+                model: 'products'
             })
         //if not found orders 
         if(!orders){
