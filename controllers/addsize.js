@@ -58,7 +58,7 @@ export const updatestock = async (req , res , next) =>{
             return res.json('decrement only  ' + size.stock)
         } 
         //update size
-       await Size.updateOne({_id : id}, {$inc :{stock : stock } inStock :true})
+       await Size.updateOne({_id : id}, {$inc :{stock : stock }, inStock :true})
         res.status(200).json("stock update")
 }
 
