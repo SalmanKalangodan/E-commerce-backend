@@ -9,7 +9,7 @@ export const getorders = async (req , res ,next) =>{
         //find user using id
       
         const user = await Users.findById(userid).populate({
-            path:'order',
+            path:'Orders',
             populate : {path : '_id'}
         })
         //if not find user
